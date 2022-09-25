@@ -19,7 +19,7 @@ class _EditProdutScreenState extends State<EditProdutScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
   var _editedProduct = Product(
-    id: '',
+    id: 'New',
     title: '',
     description: '',
     price: 0,
@@ -43,7 +43,7 @@ class _EditProdutScreenState extends State<EditProdutScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       final productId = ModalRoute.of(context)?.settings.arguments as String;
-      if (productId != '') {
+      if (productId != 'New') {
         _editedProduct =
             Provider.of<Products>(context, listen: false).findById(productId);
         _intValues = {
@@ -89,11 +89,12 @@ class _EditProdutScreenState extends State<EditProdutScreen> {
       return;
     }
     _form.currentState?.save();
-    if (_editedProduct.id != '') {
+    if (_editedProduct.id != 'New') {
       Provider.of<Products>(context, listen: false)
           .udpdateProduct(_editedProduct.id, _editedProduct);
     } else {
       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+      print('hear');
     }
     Navigator.of(context).pop();
   }
