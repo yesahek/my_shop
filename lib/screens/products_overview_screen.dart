@@ -24,26 +24,26 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _isInit = true;
   var _isLoading = false;
 
-  @override
-  void initState() {
-    Future.delayed(Duration.zero).then((_) => {
-          Provider.of<Products>(context, listen: false).fetchAndSetProducts(),
-        });
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   Future.delayed(Duration.zero).then((_) => {
+  //         Provider.of<Products>(context, listen: false).fetchAndSetProducts(),
+  //       });
+  //   super.initState();
+  // }
 
   @override
   void didChangeDependencies() {
-    // if (_isInit) {
-    //   setState(() {
-    //     _isLoading = true;
-    //   });
-    //   Provider.of<Products>(context, listen: false).fetchAndSetProducts();
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    // }
-    // _isInit = false;
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false).fetchAndSetProducts();
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -64,7 +64,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                 }
               });
             }),
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => [
               const PopupMenuItem(
                 value: FilterOptions.Favorites,
@@ -92,7 +92,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProdutsGrid(_showOnlyFavorites),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProdutsGrid(_showOnlyFavorites),
     );
   }
 }

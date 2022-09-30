@@ -72,21 +72,22 @@ class Products with ChangeNotifier {
     try {
       final respo = await http.get(Uri.parse(url));
       final extractedData = (json.decode(respo.body)) as Map<String, dynamic>;
-      final List<Product> loadedProducts = [];
-      extractedData.forEach((prodId, prodData) {
-        loadedProducts.add(Product(
-          id: prodId,
-          title: prodData['title'],
-          description: prodData['description'],
-          price: prodData['price'],
-          isFavorite: prodData['isFavorite'],
-          imageUrl: prodData['imageUrl'],
-        ));
-      });
+      List<Product> loadedProducts = [];
+      extractedData.forEach(
+        (key, value) {
+          loadedProducts.add(Product(
+            id: key,
+            title: value["title"],
+            description: value["description"],
+            price: value['price'],
+            imageUrl: value["imageUrl"],
+            isFavorite: value['isFavorite'],
+          ));
+        },
+      );
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
-      print("..fetchandsetProducts");
       rethrow;
     }
   }
@@ -97,12 +98,12 @@ class Products with ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse(url),
-        body: json.encode(<String, String>{
+        body: json.encode({
           'title': product.title,
           'description': product.description,
-          'price': product.price.toString(),
+          'price': product.price,
           'imageUrl': product.imageUrl,
-          'isFavorite': product.isFavorite.toString(),
+          'isFavorite': product.isFavorite,
         }),
       );
       final newProduct = Product(
