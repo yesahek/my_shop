@@ -94,7 +94,7 @@ class _EditProdutScreenState extends State<EditProdutScreen> {
       _isLoading = true;
     });
     if (_editedProduct.id != 'New') {
-      Provider.of<Products>(context, listen: false)
+      await Provider.of<Products>(context, listen: false)
           .udpdateProduct(_editedProduct.id, _editedProduct);
       setState(() {
         _isLoading = false;
@@ -119,13 +119,18 @@ class _EditProdutScreenState extends State<EditProdutScreen> {
             ],
           ),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       }
+      // finally {
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   Navigator.of(context).pop();
+      // }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
