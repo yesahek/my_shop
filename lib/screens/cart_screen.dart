@@ -38,12 +38,13 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   TextButton(
-                    onPressed: () {
-                      Provider.of<Orders>(context, listen: false).addOrder(
-                        cart.items.values.toList(),
-                        cart.totalAmount,
-                      );
-                      cart.clear();
+                    onPressed: () async {
+                      await Provider.of<Orders>(context, listen: false)
+                          .addOrder(
+                            cart.items.values.toList(),
+                            cart.totalAmount,
+                          )
+                          .then((_) => cart.clear());
                     },
                     child: const Text('ORDER NOW'),
                   ),
