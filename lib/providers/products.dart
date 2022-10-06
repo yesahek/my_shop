@@ -122,6 +122,24 @@ class Products with ChangeNotifier {
     }
   }
 
+  Future<void> toggleFavoriteStatus(String id, bool isFavorite) async {
+    final prodIndex = _items.indexWhere((element) => element.id == id);
+    if (prodIndex >= 0) {
+      final url =
+          'https://flutter-update-66270-default-rtdb.firebaseio.com/products/$id.json';
+      try {
+        await http
+            .patch(Uri.parse(url),
+                body: json.encode({
+                  'isFavorite': !isFavorite,
+                }))
+            .then((_) => notifyListeners());
+      } catch (e) {
+        rethrow;
+      }
+    }
+  }
+
   Future<void> udpdateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
