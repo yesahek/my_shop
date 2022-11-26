@@ -21,18 +21,27 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-            create: (context) => Auth(),
+          ChangeNotifierProvider.value(
+            value: Auth(),
           ),
-          ChangeNotifierProvider(
-            create: ((ctx) => Products()),
+          ChangeNotifierProxyProvider<Auth, Products>(
+            create: (ctx) => Products(
+              '',
+              [],
+            ),
+            update: (ctx, auth, previousProducts) => Products(
+              auth.token as String,
+              previousProducts == null ? [] : previousProducts.items,
+            ),
           ),
           ChangeNotifierProvider(
             create: (ctx) => Cart(),
           ),
-          ChangeNotifierProvider(
-            create: (ctx) => Orders(),
-          ),
+          ChangeNotifierProxyProvider<Auth, Orders>(
+              create: (ctx) => Orders('', []),
+              update: (ctx, auth, previousOrders) => Orders(
+                  auth.token as String,
+                  previousOrders == null ? [] : previousOrders.orders)),
         ],
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
